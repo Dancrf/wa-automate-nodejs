@@ -116,10 +116,8 @@ export async function create(config: AdvancedConfig | ConfigObject = {}): Promis
 
   console.log(config?.disableSpins ? boxen([
     `@open-wa/wa-automate   `,
-    `${pkg.description}`, //.replace(' 💬 🤖 ','')
-    `Version: ${pkg.version}   `,
-    `Check out the latest changes: https://github.com/open-wa/wa-automate-nodejs#latest-changes   `,
-  ].join('\n'), {padding: 1, borderColor: 'yellow', borderStyle: 'bold'}) : prettyFont.string)
+    `Versão: ${pkg.version}   `,
+  ].join('\n'), {padding: 1, borderColor: 'red', borderStyle: 'bold'}) : prettyFont.string)
   
   if(config?.popup) {
     const {popup} = await import('./popup')
@@ -136,9 +134,8 @@ export async function create(config: AdvancedConfig | ConfigObject = {}): Promis
   log.info("PPTR VERSION INFO", PPTR_VERSION)
   try {
     if(typeof config === 'string') console.error("AS OF VERSION 3+ YOU CAN NO LONGER SET THE SESSION ID AS THE FIRST PARAMETER OF CREATE. CREATE CAN ONLY TAKE A CONFIG OBJECT. IF YOU STILL HAVE CONFIGS AS A SECOND PARAMETER, THEY WILL HAVE NO EFFECT! PLEASE SEE DOCS.")
-    spinner.start('Starting');
-    spinner.succeed(`Version: ${pkg.version}`);
-    spinner.info(`Initializing WA`);
+    spinner.start('Iniciando');
+    spinner.succeed(`Versão: ${pkg.version}`);
     /**
      * Check if the IGNORE folder exists, therefore, assume that the session is MD.
      */
@@ -192,16 +189,10 @@ export async function create(config: AdvancedConfig | ConfigObject = {}): Promis
       RAM_INFO,
       PPTR_VERSION
     };
-    if(config?.logDebugInfoAsObject || config?.disableSpins) spinner.succeed(`Debug info: ${JSON.stringify(debugInfo, null, 2)}`);
-     else {
-      console.table(debugInfo);
-      log.info('Debug info:', debugInfo);
-     }
+
      debugInfo.LATEST_VERSION = !(notifier?.update && (notifier?.update.latest !== pkg.version))
      debugInfo.CLI = process.env.OWA_CLI && true || false
      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-     spinner.succeed('Use this easy pre-filled link to report an issue: ' + generateGHIssueLink(config,debugInfo));
-     spinner.info(`Time to injection: ${(now() - browserLaunchedTs).toFixed(0)     }ms`);
     if (canInjectEarly) {
       if(attemptingReauth) await waPage.evaluate(`window.Store = {"Msg": true}`)
       spinner.start('Injecting api');
@@ -212,7 +203,7 @@ export async function create(config: AdvancedConfig | ConfigObject = {}): Promis
       if (throwOnError) throw Error('TOSBLOCK');
     }
 
-    spinner.start('Authenticating');
+    spinner.start('Autenticando');
     const authRace = [];
     authRace.push(isAuthenticated(waPage).catch(()=>{}))
     if (config?.authTimeout!==0) {
@@ -412,10 +403,8 @@ export async function create(config: AdvancedConfig | ConfigObject = {}): Promis
         await client.refresh();
         spinner.info("Session refreshed.")
       }
-      const issueLink = await client.getIssueLink();
-      console.log(boxen("Use the link below to easily report issues:👇👇👇", {padding: 1, borderColor: 'red'}))
-      spinner.succeed(issueLink)
-      spinner.succeed(`🚀 @OPEN-WA ready for account: ${me.user.slice(-4)}`);
+
+      spinner.succeed(`🚀 Bot Iniciado!`);
       spinner.emit('SUCCESS');
       spinner.remove();
       return client;
